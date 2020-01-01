@@ -15,6 +15,13 @@ public final class GroupId {
         }
     }
 
+    public static GroupId parse(String id) {
+        var parts = id.split("/");
+        var userId = new UserId(parts[0]);
+        var groupId = parts[1];
+        return new GroupId(userId, groupId);
+    }
+
     @Override
     public String toString() {
         return String.format("%s/%s", userId, id);

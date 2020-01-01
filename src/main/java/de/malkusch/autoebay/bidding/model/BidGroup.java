@@ -3,6 +3,7 @@ package de.malkusch.autoebay.bidding.model;
 import static de.malkusch.autoebay.bidding.model.Bid.State.OPEN;
 import static de.malkusch.autoebay.bidding.model.Bid.State.OUTBID;
 import static de.malkusch.autoebay.bidding.model.Bid.State.WON;
+import static de.malkusch.autoebay.shared.infrastructure.event.EventPublisher.publishEvent;
 import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.empty;
@@ -16,6 +17,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import de.malkusch.autoebay.bidding.model.Bid.State;
+import de.malkusch.autoebay.shared.infrastructure.event.Event;
 
 public final class BidGroup {
 
@@ -59,6 +61,16 @@ public final class BidGroup {
         }
 
         bids.add(bid);
+        publishEvent(new BidRegistered(id));
+    }
+
+    public static final class BidRegistered implements Event {
+
+        public final String groupId;
+
+        private BidRegistered(GroupId id) {
+            this.groupId = id.toString();
+        }
     }
 
     Set<Bid> won() {
