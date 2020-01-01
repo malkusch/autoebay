@@ -32,7 +32,7 @@ public final class ScheduleGroupApplicationService {
     private final Duration auctionEndWindow;
     private final Clock clock;
 
-    ScheduleGroupApplicationService(ScheduledBidFactory factory, SchedulesBidRepository schedulesBids,
+    public ScheduleGroupApplicationService(ScheduledBidFactory factory, SchedulesBidRepository schedulesBids,
             Duration auctionEndWindow, BidGroupRepository groups, TransactionService tx, Scheduler scheduler,
             BidApplicationService bidder, SynchronizeGroupApplicationService synchronizer, Clock clock) {
 

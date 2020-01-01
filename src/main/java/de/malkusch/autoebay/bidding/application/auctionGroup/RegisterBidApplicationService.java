@@ -20,7 +20,7 @@ public final class RegisterBidApplicationService {
     private final Duration biddingWindow;
     private final TransactionService tx;
 
-    RegisterBidApplicationService(AuctionRepository auctions, BidGroupRepository groups, Duration biddingWindow,
+    public RegisterBidApplicationService(AuctionRepository auctions, BidGroupRepository groups, Duration biddingWindow,
             TransactionService tx) {
 
         this.groups = groups;

@@ -27,7 +27,7 @@ public final class BidService {
         }
     }
 
-    BidService(Api api, MandateRepository mandates) {
+    public BidService(Api api, MandateRepository mandates) {
         this.api = api;
         this.mandates = mandates;
     }

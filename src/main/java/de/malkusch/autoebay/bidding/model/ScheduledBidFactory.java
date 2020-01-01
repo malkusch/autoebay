@@ -9,7 +9,7 @@ public class ScheduledBidFactory {
     private final SchedulesBidRepository schedules;
     private final Scheduler scheduler;
 
-    ScheduledBidFactory(SchedulesBidRepository schedules, Scheduler scheduler) {
+    public ScheduledBidFactory(SchedulesBidRepository schedules, Scheduler scheduler) {
         this.schedules = schedules;
         this.scheduler = scheduler;
     }

@@ -17,7 +17,7 @@ public final class SynchronizeBidGroupService {
 
     }
 
-    SynchronizeBidGroupService(Api api, Clock clock, MandateRepository mandates) {
+    public SynchronizeBidGroupService(Api api, Clock clock, MandateRepository mandates) {
         this.api = api;
         this.clock = clock;
         this.mandates = mandates;

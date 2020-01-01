@@ -17,7 +17,9 @@ public final class CreateBidGroupApplicationService {
     private final BidGroupRepository groups;
     private final TransactionService tx;
 
-    CreateBidGroupApplicationService(MandateRepository mandates, BidGroupRepository groups, TransactionService tx) {
+    public CreateBidGroupApplicationService(MandateRepository mandates, BidGroupRepository groups,
+            TransactionService tx) {
+
         this.mandates = mandates;
         this.groups = groups;
         this.tx = tx;

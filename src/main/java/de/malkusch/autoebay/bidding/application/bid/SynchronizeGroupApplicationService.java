@@ -14,7 +14,7 @@ public final class SynchronizeGroupApplicationService {
     private final TransactionService tx;
     private final SynchronizeBidGroupService synchronizer;
 
-    SynchronizeGroupApplicationService(BidGroupRepository groups, TransactionService tx,
+    public SynchronizeGroupApplicationService(BidGroupRepository groups, TransactionService tx,
             SynchronizeBidGroupService synchronizer) {
 
         this.groups = groups;

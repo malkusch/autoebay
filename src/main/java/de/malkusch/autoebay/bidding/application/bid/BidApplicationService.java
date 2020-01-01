@@ -15,7 +15,7 @@ public final class BidApplicationService {
     private final TransactionService tx;
     private final BidService bidder;
 
-    BidApplicationService(BidGroupRepository groups, TransactionService tx, BidService bidder) {
+    public BidApplicationService(BidGroupRepository groups, TransactionService tx, BidService bidder) {
         this.groups = groups;
         this.tx = tx;
         this.bidder = bidder;

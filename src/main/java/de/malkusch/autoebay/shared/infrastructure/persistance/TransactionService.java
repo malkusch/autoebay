@@ -16,8 +16,6 @@ public interface TransactionService {
         void run() throws E;
     }
 
-    <T, E extends Throwable> T tx(VoidOperation<E> operation) throws E;
-
     <T, E extends Throwable> T tx(Operation<T, E> operation) throws E;
 
     default <T, E extends Throwable> T tx(IsolationLevel isolationLevel, Operation<T, E> operation) throws E {
@@ -28,7 +26,9 @@ public interface TransactionService {
         tx(DEFAULT, operation);
     }
 
-    <E extends Throwable> void afterCurrentTx(VoidOperation<E> operation) throws E;
+    default <E extends Throwable> void afterCurrentTx(VoidOperation<E> operation) throws E {
+        afterCurrentTx(operation);
+    }
 
     <T, E extends Throwable> T afterCurrentTx(Operation<T, E> operation) throws E;
 }

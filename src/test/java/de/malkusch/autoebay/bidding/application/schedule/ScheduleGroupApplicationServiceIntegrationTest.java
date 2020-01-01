@@ -121,9 +121,9 @@ public class ScheduleGroupApplicationServiceIntegrationTest {
 
     @Test
     public void shouldNotDecreaseRemainingWhenAuctionWasInPast() {
-        applicationServiceTests.setTime("2012-01-02");
+        applicationServiceTests.setTime("2014-01-02");
         var groupId = applicationServiceTests.createGroup(10);
-        var command1 = applicationServiceTests.registerBid(groupId, "2014-01-01");
+        applicationServiceTests.registerBid(groupId, "2014-01-01");
         var command2 = applicationServiceTests.registerBid(groupId, "2014-01-03");
 
         applicationServiceTests.loseAuction(command2.itemNumber);
