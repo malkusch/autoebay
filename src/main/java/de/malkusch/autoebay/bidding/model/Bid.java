@@ -12,7 +12,7 @@ public final class Bid {
     State state;
 
     public static enum State {
-        OPEN, OUTBID, WON
+        OPEN, NOTWON, WON
     }
 
     Bid(ItemNumber itemNumber, Price price, Instant bidTime, State state) {
@@ -28,6 +28,14 @@ public final class Bid {
 
     Instant bidTime() {
         return bidTime;
+    }
+
+    void win() {
+        state = State.WON;
+    }
+
+    void notwon() {
+        state = State.NOTWON;
     }
 
     @Override
@@ -47,5 +55,9 @@ public final class Bid {
         }
         var other = (Bid) obj;
         return itemNumber.equals(other.itemNumber);
+    }
+
+    public Price price() {
+        return price;
     }
 }

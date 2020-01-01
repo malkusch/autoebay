@@ -15,11 +15,23 @@ public final class GroupId {
         }
     }
 
+    void assertValidMandate(Mandate mandate) {
+        requireNonNull(mandate);
+        if (!mandate.userId().equals(userId)) {
+            throw new IllegalArgumentException(
+                    String.format("Mandate's user %s is not valid for group %s", mandate.userId(), this));
+        }
+    }
+
     public static GroupId parse(String id) {
         var parts = id.split("/");
         var userId = new UserId(parts[0]);
         var groupId = parts[1];
         return new GroupId(userId, groupId);
+    }
+
+    public UserId userId() {
+        return userId;
     }
 
     @Override

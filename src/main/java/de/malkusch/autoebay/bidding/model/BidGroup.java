@@ -1,7 +1,7 @@
 package de.malkusch.autoebay.bidding.model;
 
 import static de.malkusch.autoebay.bidding.model.Bid.State.OPEN;
-import static de.malkusch.autoebay.bidding.model.Bid.State.OUTBID;
+import static de.malkusch.autoebay.bidding.model.Bid.State.NOTWON;
 import static de.malkusch.autoebay.bidding.model.Bid.State.WON;
 import static de.malkusch.autoebay.shared.infrastructure.event.EventPublisher.publishEvent;
 import static java.util.Comparator.comparing;
@@ -56,7 +56,7 @@ public final class BidGroup {
         }
 
         var bidTime = auction.end().minus(biddingWindow);
-        var state = price.isMoreThan(auction.price()) ? OPEN : OUTBID;
+        var state = price.isMoreThan(auction.price()) ? OPEN : NOTWON;
 
         var bid = new Bid(auction.itemNumber(), price, bidTime, state);
         if (bids.contains(bid)) {
