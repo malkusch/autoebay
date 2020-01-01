@@ -1,7 +1,7 @@
 package de.malkusch.autoebay.bidding.model;
 
-import static de.malkusch.autoebay.bidding.model.Bid.State.OPEN;
 import static de.malkusch.autoebay.bidding.model.Bid.State.NOTWON;
+import static de.malkusch.autoebay.bidding.model.Bid.State.OPEN;
 import static de.malkusch.autoebay.bidding.model.Bid.State.WON;
 import static de.malkusch.autoebay.shared.infrastructure.event.EventPublisher.publishEvent;
 import static java.util.Comparator.comparing;
@@ -97,7 +97,7 @@ public final class BidGroup {
         return bids(OPEN).min(comparing(Bid::bidTime));
     }
 
-    private Stream<Bid> bids(State state) {
+    Stream<Bid> bids(State state) {
         return bids.stream().filter(it -> it.state == state);
     }
 

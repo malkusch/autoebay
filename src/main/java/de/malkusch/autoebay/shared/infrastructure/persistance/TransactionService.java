@@ -8,10 +8,27 @@ public interface TransactionService {
         DEFAULT, SERIALIZABLE
     }
 
-    void tx(Runnable operation);
+    public static interface Operation<T, E extends Throwable> {
+        T run() throws E;
+    }
 
-    default void tx(IsolationLevel isolationLevel, Runnable operation) {
+    public static interface VoidOperation<E extends Throwable> {
+        void run() throws E;
+    }
+
+    <T, E extends Throwable> T tx(VoidOperation<E> operation) throws E;
+
+    <T, E extends Throwable> T tx(Operation<T, E> operation) throws E;
+
+    default <T, E extends Throwable> T tx(IsolationLevel isolationLevel, Operation<T, E> operation) throws E {
+        return tx(DEFAULT, operation);
+    }
+
+    default <E extends Throwable> void tx(IsolationLevel isolationLevel, VoidOperation<E> operation) throws E {
         tx(DEFAULT, operation);
     }
 
+    <E extends Throwable> void afterCurrentTx(VoidOperation<E> operation) throws E;
+
+    <T, E extends Throwable> T afterCurrentTx(Operation<T, E> operation) throws E;
 }

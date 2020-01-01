@@ -1,19 +1,24 @@
 package de.malkusch.autoebay.bidding.model;
 
+import static de.malkusch.autoebay.shared.infrastructure.event.EventPublisher.publishEvent;
 import static java.util.Objects.requireNonNull;
 
+import java.time.Instant;
+
 import de.malkusch.autoebay.bidding.model.BidService.Api.ApiException;
+import de.malkusch.autoebay.shared.infrastructure.event.Event;
 
 public final class BidService {
 
     private final Api api;
+    private final MandateRepository mandates;
 
     public static interface Api {
 
-        BidResult bid(Mandate mandate, ItemNumber itemNumber, Price price) throws ApiException;
+        Result bid(Mandate mandate, ItemNumber itemNumber, Price price) throws ApiException;
 
-        public static enum BidResult {
-            WON, NOTWON
+        public static class Result {
+            public Instant auctionEnd;
         }
 
         public static final class ApiException extends Exception {
@@ -22,13 +27,14 @@ public final class BidService {
         }
     }
 
-    BidService(Api api) {
+    BidService(Api api, MandateRepository mandates) {
         this.api = api;
+        this.mandates = mandates;
     }
 
-    public void bid(Mandate mandate, BidGroup group) throws ApiException {
+    public void placeBid(BidGroup group) throws ApiException {
         requireNonNull(group);
-        group.id().assertValidMandate(mandate);
+        var mandate = mandates.findAndAssertExisting(group.id().userId());
 
         var maybeNext = group.nextOpenBid();
         if (maybeNext.isEmpty()) {
@@ -37,17 +43,16 @@ public final class BidService {
         var nextBid = maybeNext.get();
 
         var result = api.bid(mandate, nextBid.itemNumber(), nextBid.price());
-        switch (result) {
-        case WON:
-            nextBid.win();
-            break;
+        publishEvent(new BidPlaced(group, result.auctionEnd));
+    }
 
-        case NOTWON:
-            nextBid.notwon();
-            break;
+    public static final class BidPlaced implements Event {
+        public final String groupId;
+        public Instant auctionEnd;
 
-        default:
-            throw new IllegalStateException("Unexpected result " + result);
+        private BidPlaced(BidGroup group, Instant auctionEnd) {
+            groupId = group.id().toString();
+            this.auctionEnd = auctionEnd;
         }
     }
 }

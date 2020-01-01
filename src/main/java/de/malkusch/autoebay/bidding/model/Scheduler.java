@@ -2,6 +2,9 @@ package de.malkusch.autoebay.bidding.model;
 
 import static java.util.Objects.requireNonNull;
 
+import java.time.Instant;
+import java.util.function.Consumer;
+
 public interface Scheduler {
 
     public final class Id {
@@ -35,7 +38,11 @@ public interface Scheduler {
         }
     }
 
-    boolean schedule(ScheduledBid bid);
+    void schedule(ScheduledBid bid, Consumer<ScheduledBid> task);
 
-    void unschedule(GroupId id);
+    void schedule(Instant time, ScheduledBid bid, Consumer<ScheduledBid> task);
+
+    void unschedule(GroupId groupId);
+
+    Id id();
 }

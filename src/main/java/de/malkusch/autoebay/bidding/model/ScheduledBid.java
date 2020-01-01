@@ -6,11 +6,13 @@ import static java.util.Optional.empty;
 import java.time.Instant;
 import java.util.Optional;
 
+import de.malkusch.autoebay.bidding.model.Scheduler.Id;
+
 public final class ScheduledBid {
 
-    private final GroupId groupId;
+    final GroupId groupId;
     private final Instant time;
-    private final Optional<Scheduler.Id> scheduledAt;
+    private volatile Optional<Scheduler.Id> scheduledAt;
 
     public ScheduledBid(GroupId groupId, Instant time) {
         this(groupId, time, empty());
@@ -22,7 +24,15 @@ public final class ScheduledBid {
         this.scheduledAt = requireNonNull(scheduledAt);
     }
 
+    public GroupId groupId() {
+        return groupId;
+    }
+
     public Instant time() {
         return time;
+    }
+
+    public void scheduleAt(Id id) {
+        scheduledAt = Optional.of(id);
     }
 }
