@@ -22,6 +22,10 @@ public final class Bid {
         this.state = requireNonNull(state);
     }
 
+    ItemNumber itemNumber() {
+        return itemNumber;
+    }
+
     Instant bidTime() {
         return bidTime;
     }

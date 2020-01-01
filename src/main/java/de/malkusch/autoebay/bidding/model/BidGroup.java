@@ -42,6 +42,10 @@ public final class BidGroup {
         count.assertPositive();
     }
 
+    public GroupId id() {
+        return id;
+    }
+
     public void registerBid(Auction auction, Price price, Duration biddingWindow) {
         requireNonNull(auction);
         requireNonNull(price);
