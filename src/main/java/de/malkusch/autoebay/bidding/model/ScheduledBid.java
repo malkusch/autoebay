@@ -6,8 +6,6 @@ import static java.util.Optional.empty;
 import java.time.Instant;
 import java.util.Optional;
 
-import de.malkusch.autoebay.bidding.model.Scheduler.Id;
-
 public final class ScheduledBid {
 
     final GroupId groupId;
@@ -32,7 +30,11 @@ public final class ScheduledBid {
         return time;
     }
 
-    public void scheduleAt(Id id) {
+    public void scheduleAt(Scheduler.Id id) {
         scheduledAt = Optional.of(id);
+    }
+
+    public Optional<Scheduler.Id> scheduledAt() {
+        return scheduledAt;
     }
 }

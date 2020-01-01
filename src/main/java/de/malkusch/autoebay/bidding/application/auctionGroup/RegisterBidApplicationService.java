@@ -11,7 +11,6 @@ import de.malkusch.autoebay.bidding.model.BidGroupRepository;
 import de.malkusch.autoebay.bidding.model.GroupId;
 import de.malkusch.autoebay.bidding.model.ItemNumber;
 import de.malkusch.autoebay.bidding.model.Price;
-import de.malkusch.autoebay.bidding.model.UserId;
 import de.malkusch.autoebay.shared.infrastructure.persistance.TransactionService;
 
 public final class RegisterBidApplicationService {
@@ -31,7 +30,6 @@ public final class RegisterBidApplicationService {
     }
 
     public static final class RegisterBid {
-        public String userId;
         public String groupId;
         public String itemNumber;
         public BigDecimal price;
@@ -40,8 +38,7 @@ public final class RegisterBidApplicationService {
 
     public void register(RegisterBid command) {
         tx.tx(SERIALIZABLE, () -> {
-            var userId = new UserId(command.userId);
-            var groupId = new GroupId(userId, command.groupId);
+            var groupId = GroupId.parse(command.groupId);
             var group = groups.find(groupId).orElseThrow(notFound("Group " + groupId + " not found"));
             var itemNumber = new ItemNumber(command.itemNumber);
             var auction = auctions.find(itemNumber).orElseThrow(notFound("Item " + itemNumber + " not found"));

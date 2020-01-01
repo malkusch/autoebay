@@ -74,7 +74,8 @@ public final class ScheduleGroupApplicationService {
 
                 var result = factory.scheduledBid(group);
                 result.ifPresent(it -> {
-                    it.scheduleAt(scheduler.id());
+                    var schedulerId = nextSchedulerId();
+                    it.scheduleAt(schedulerId);
                     schedulesBids.store(it);
                 });
                 return result;
@@ -83,6 +84,10 @@ public final class ScheduleGroupApplicationService {
             scheduledBid.ifPresent(
                     it -> scheduler.schedule(command.time, it, this::scheduledSynchronizeAndThenScheduleBid));
         });
+    }
+
+    private Scheduler.Id nextSchedulerId() {
+        return scheduler.id();
     }
 
     private void scheduledSynchronizeAndThenScheduleBid(ScheduledBid bid) {

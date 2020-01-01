@@ -29,8 +29,8 @@ public final class CreateBidGroupApplicationService {
         public int count;
     }
 
-    public void create(CreateBiddingGroup command) {
-        tx.tx(SERIALIZABLE, () -> {
+    public Result create(CreateBiddingGroup command) {
+        return tx.tx(SERIALIZABLE, () -> {
             var userId = new UserId(command.userId);
             var mandate = mandates.find(userId).orElseThrow(notAuthenticated("No mandate for " + userId));
             var name = new GroupName(command.name);
@@ -38,6 +38,16 @@ public final class CreateBidGroupApplicationService {
 
             var group = new BidGroup(mandate, name, count);
             groups.store(group);
+
+            return new Result(group);
         });
+    }
+
+    public static final class Result {
+        public final String groupId;
+
+        private Result(BidGroup group) {
+            this.groupId = group.id().toString();
+        }
     }
 }

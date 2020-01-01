@@ -81,7 +81,7 @@ public final class BidGroup {
         return bids(WON).collect(toSet());
     }
 
-    private Count remaining() {
+    Count remaining() {
         var won = new Count(won().size());
         return count.minus(won);
     }
