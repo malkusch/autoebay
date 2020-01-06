@@ -24,13 +24,15 @@ public final class Configuration {
             MandateRepository mandates, BidService.Api bidApi, SchedulesBidRepository schedules, Scheduler scheduler,
             SynchronizeBidGroupService.Api syncApi, Clock clock, Duration biddingWindow, Duration auctionEndWindow) {
 
-        var model = new Model(auctions, groups, mandates, bidApi, schedules, scheduler, syncApi, clock);
+        model = new Model(auctions, groups, mandates, bidApi, schedules, scheduler, syncApi, clock);
         application = new Application(model, tx, biddingWindow, auctionEndWindow, clock);
     }
 
     public final Application application;
 
     public static final class Application {
+        public final Duration auctionEndWindow;
+        public final Duration biddingWindow;
         public final CreateBidGroupApplicationService createBidGroupApplicationService;
         public final RegisterBidApplicationService registerBidApplicationService;
         public final BidApplicationService bidApplicationService;
@@ -39,6 +41,9 @@ public final class Configuration {
 
         public Application(Model model, TransactionService tx, Duration biddingWindow, Duration auctionEndWindow,
                 Clock clock) {
+
+            this.auctionEndWindow = auctionEndWindow;
+            this.biddingWindow = biddingWindow;
             createBidGroupApplicationService = new CreateBidGroupApplicationService(model.mandates, model.groups, tx);
             registerBidApplicationService = new RegisterBidApplicationService(model.auctions, model.groups,
                     biddingWindow, tx);
@@ -51,6 +56,8 @@ public final class Configuration {
         }
 
     }
+
+    public final Model model;
 
     public static final class Model {
         public final AuctionRepository auctions;

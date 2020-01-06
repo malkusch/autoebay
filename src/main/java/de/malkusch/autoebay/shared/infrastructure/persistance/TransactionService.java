@@ -16,14 +16,17 @@ public interface TransactionService {
         void run() throws E;
     }
 
-    <T, E extends Throwable> T tx(Operation<T, E> operation) throws E;
-
-    default <T, E extends Throwable> T tx(IsolationLevel isolationLevel, Operation<T, E> operation) throws E {
+    default <T, E extends Throwable> T tx(Operation<T, E> operation) throws E {
         return tx(DEFAULT, operation);
     }
 
+    <T, E extends Throwable> T tx(IsolationLevel isolationLevel, Operation<T, E> operation) throws E;
+
     default <E extends Throwable> void tx(IsolationLevel isolationLevel, VoidOperation<E> operation) throws E {
-        tx(DEFAULT, operation);
+        tx(isolationLevel, () -> {
+            operation.run();
+            return null;
+        });
     }
 
     default <E extends Throwable> void afterCurrentTx(VoidOperation<E> operation) throws E {

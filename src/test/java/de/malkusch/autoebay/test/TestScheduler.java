@@ -9,12 +9,6 @@ import de.malkusch.autoebay.bidding.model.Scheduler;
 
 public class TestScheduler implements Scheduler {
 
-    private final Scheduler scheduler;
-
-    public TestScheduler(Scheduler scheduler) {
-        this.scheduler = scheduler;
-    }
-
     public void setTime(Instant time) {
 
     }
