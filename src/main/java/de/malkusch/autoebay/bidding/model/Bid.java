@@ -9,17 +9,11 @@ public final class Bid {
     private final ItemNumber itemNumber;
     private final Price price;
     private final Instant bidTime;
-    State state;
 
-    public static enum State {
-        OPEN, NOTWON, WON
-    }
-
-    Bid(ItemNumber itemNumber, Price price, Instant bidTime, State state) {
+    Bid(ItemNumber itemNumber, Price price, Instant bidTime) {
         this.itemNumber = requireNonNull(itemNumber);
         this.price = requireNonNull(price);
         this.bidTime = requireNonNull(bidTime);
-        this.state = requireNonNull(state);
     }
 
     ItemNumber itemNumber() {
@@ -28,14 +22,6 @@ public final class Bid {
 
     Instant bidTime() {
         return bidTime;
-    }
-
-    void win() {
-        state = State.WON;
-    }
-
-    void notwon() {
-        state = State.NOTWON;
     }
 
     @Override

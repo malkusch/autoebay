@@ -5,7 +5,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
@@ -20,8 +19,6 @@ import de.malkusch.autoebay.bidding.model.Price;
 import de.malkusch.autoebay.bidding.model.UserId;
 import de.malkusch.autoebay.test.TestConfigurationBuilder;
 import de.malkusch.autoebay.test.TestMandateRepository;
-import de.malkusch.autoebay.test.TestScheduler;
-import de.malkusch.autoebay.test.TestSynchronizeBidGroupService;
 
 public class AplicationServiceIntegrationTests {
 
@@ -30,12 +27,6 @@ public class AplicationServiceIntegrationTests {
     public AplicationServiceIntegrationTests() {
         var builder = new TestConfigurationBuilder();
 
-        scheduler = new TestScheduler();
-        builder.scheduler = scheduler;
-
-        syncApi = new TestSynchronizeBidGroupService();
-        builder.syncApi = syncApi;
-
         mandates = new TestMandateRepository();
         builder.mandates = mandates;
 
@@ -43,9 +34,9 @@ public class AplicationServiceIntegrationTests {
         builder.auctions = auctions;
 
         configuration = builder.build();
+        builder.enableEvents();
 
         this.registerBidService = configuration.application.registerBidApplicationService;
-        this.auctionEndWindow = configuration.application.auctionEndWindow;
         this.createGroupService = configuration.application.createBidGroupApplicationService;
     }
 
@@ -78,35 +69,6 @@ public class AplicationServiceIntegrationTests {
         var itemNumberVO = new ItemNumber(itemNumber);
         var auction = new Auction(itemNumberVO, ONE_EURO, date);
         when(auctions.find(itemNumberVO)).thenReturn(Optional.of(auction));
-    }
-
-    private final TestScheduler scheduler;
-
-    public void setTime(Instant time) {
-        scheduler.setTime(time);
-    }
-
-    public void setTime(String time) {
-        setTime(Instant.parse(time));
-    }
-
-    private final Duration auctionEndWindow;
-    private final TestSynchronizeBidGroupService syncApi;
-
-    public void winAuction(String itemNumber) {
-        var itemNumberVO = new ItemNumber(itemNumber);
-        var auction = auctions.find(itemNumberVO).get();
-
-        setTime(auction.end());
-        syncApi.setWon(itemNumberVO);
-        setTime(auction.end().plus(auctionEndWindow));
-    }
-
-    public void loseAuction(String itemNumber) {
-        var itemNumberVO = new ItemNumber(itemNumber);
-        var auction = auctions.find(itemNumberVO).get();
-
-        setTime(auction.end().plus(auctionEndWindow));
     }
 
     private final TestMandateRepository mandates;

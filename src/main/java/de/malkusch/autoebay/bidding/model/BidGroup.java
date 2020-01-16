@@ -1,22 +1,13 @@
 package de.malkusch.autoebay.bidding.model;
 
-import static de.malkusch.autoebay.bidding.model.Bid.State.NOTWON;
-import static de.malkusch.autoebay.bidding.model.Bid.State.OPEN;
-import static de.malkusch.autoebay.bidding.model.Bid.State.WON;
 import static de.malkusch.autoebay.shared.infrastructure.event.EventPublisher.publishEvent;
-import static java.util.Comparator.comparing;
 import static java.util.Objects.requireNonNull;
-import static java.util.Optional.empty;
 import static java.util.UUID.randomUUID;
-import static java.util.stream.Collectors.toSet;
 
 import java.time.Duration;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Stream;
 
-import de.malkusch.autoebay.bidding.model.Bid.State;
 import de.malkusch.autoebay.shared.infrastructure.event.Event;
 
 public final class BidGroup {
@@ -56,9 +47,8 @@ public final class BidGroup {
         }
 
         var bidTime = auction.end().minus(biddingWindow);
-        var state = price.isMoreThan(auction.price()) ? OPEN : NOTWON;
 
-        var bid = new Bid(auction.itemNumber(), price, bidTime, state);
+        var bid = new Bid(auction.itemNumber(), price, bidTime);
         if (bids.contains(bid)) {
             throw new IllegalArgumentException(
                     "Bid for item " + auction.itemNumber() + " exists already in group " + id);
@@ -75,30 +65,6 @@ public final class BidGroup {
         private BidRegistered(GroupId id) {
             this.groupId = id.toString();
         }
-    }
-
-    Set<Bid> won() {
-        return bids(WON).collect(toSet());
-    }
-
-    public Count remaining() {
-        var won = new Count(won().size());
-        return count.minus(won);
-    }
-
-    public boolean isCompleted() {
-        return remaining().isZero();
-    }
-
-    public Optional<Bid> nextOpenBid() {
-        if (isCompleted()) {
-            return empty();
-        }
-        return bids(OPEN).min(comparing(Bid::bidTime));
-    }
-
-    Stream<Bid> bids(State state) {
-        return bids.stream().filter(it -> it.state == state);
     }
 
     @Override

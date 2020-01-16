@@ -30,7 +30,10 @@ public interface TransactionService {
     }
 
     default <E extends Throwable> void afterCurrentTx(VoidOperation<E> operation) throws E {
-        afterCurrentTx(operation);
+        afterCurrentTx(() -> {
+            operation.run();
+            return null;
+        });
     }
 
     <T, E extends Throwable> T afterCurrentTx(Operation<T, E> operation) throws E;
